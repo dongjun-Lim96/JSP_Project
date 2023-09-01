@@ -1,0 +1,125 @@
+drop sequence mk_memseq ;
+
+create sequence mk_memseq 
+increment by 1
+start with 1
+minvalue 0
+maxvalue 10000
+nocache;
+ 
+drop table mk_member cascade constraints purge ;
+create table mk_member(
+	no number primary key,
+	name varchar2(30) not null,
+	id varchar2(30) not null,
+	password varchar2(30) not null,
+	birth number not null,
+	email varchar2(20),
+	tel varchar2(30)
+);
+
+insert into mk_member(no, name, id, password,birth)
+
+values(mk_memseq.nextval, '관리자', 'admin', '1234','921111');
+insert into mk_member(no, name, id, password, birth, email ,tel) 
+values(mk_memseq.nextval, '홍길동', 'hong', '5678', '961002', 'hong@naver.com', '01044445555') ;
+commit;
+
+-----------------------------------
+
+drop sequence mk_catseq ;
+drop table mk_category purge ;
+
+create sequence mk_catseq
+increment by 1
+start with 1
+minvalue 1
+maxvalue 10000
+nocache;
+
+
+create table mk_category(
+	cnum 	number primary key,
+	code 	varchar2(20) not null,
+	cname 	varchar2(50) not null
+);
+
+---------------------------------------
+drop sequence mk_prod ;
+
+create sequence mk_prod 
+increment by 1
+start with 1
+minvalue 0
+maxvalue 10000
+nocache;
+
+drop table mk_product cascade constraints purge ;
+create table mk_product(
+	pnum 		int not null primary key,
+	pname 		varchar2(50) not null,
+	codename  	varchar2(20) not null, 
+	pcompany 	varchar2(50),
+	pimage   		varchar2(30),
+	pqty   int default 0,
+	price   		int default 0,
+	pspec   		varchar2(12),
+	pcontents 	varchar2(300),
+	pinputdate 	varchar2(10)
+);
+
+ALTER TABLE mk_product ADD CONSTRAINT pdck CHECK(pqty>=0);
+ALTER TABLE mk_product modify CHECK(pqty> -1);
+ALTER TABLE mk_product  DROP CONsTRAINT pdck;
+
+col pname for a12
+col pcompany for a12
+col pimage for a12
+col pcontents for a12
+select * from mk_product  ;
+
+-------------------------------------
+create sequence mk_orderseq 
+increment by 1
+start with 1
+minvalue 0
+maxvalue 10000
+nocache;
+ 
+ 
+drop table mk_orders cascade constraints purge ;
+  
+create table mk_orders(
+	orderId number, -- 주문번호(orderseq)
+	memno number, -- 회원번호
+	pnum number, -- 상품번호
+	qty number, -- 수량
+	amount number -- 전체가격
+);
+
+-------------------------------------------------------
+drop table mk_board cascade constraints purge ;
+create table mk_board(
+	num number not null primary key,
+	writer varchar2(10) not null,
+	email varchar2(10),
+	subject varchar2(20) not null,
+	passwd varchar2(12) not null,
+	reg_date date not null,
+	readcount int default 0,
+	ref number  default 0 not null,
+	re_step number default 0 not null,
+	re_level number default 0 not null,
+	content varchar2(50) not null,
+	ip varchar2(15)  not null
+);
+
+drop sequence mk_board_seq ;
+
+create sequence mk_board_seq
+increment by 1
+start with 1
+minvalue 0
+maxvalue 10000
+nocache;
+
